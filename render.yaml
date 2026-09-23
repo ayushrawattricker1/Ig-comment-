@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: bot-ig
+    runtime: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn app:app --workers 1 --threads 8 --timeout 120"
