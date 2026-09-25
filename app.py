@@ -216,369 +216,355 @@ PAGE_HTML = """
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>🚀 INSTAGRAM COMMENT PANEL</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>Comment Automation</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --navy:#0c1120;
-  --navy-deep:#080b16;
-  --paper:#f6efe0;
-  --paper-shade:#ece2cc;
-  --ink:#2b2013;
-  --ink-soft:#5b4d38;
-  --gold:#b8863a;
-  --gold-bright:#d9a94f;
-  --wine:#8a2d2d;
-  --forest:#2f6f4f;
-}
-html,body{height:100%}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overscroll-behavior:none}
 body{
-  font-family:'Inter',sans-serif;
-  background:
-    radial-gradient(ellipse at 50% -10%, rgba(217,169,79,.08), transparent 55%),
-    radial-gradient(ellipse at 50% 115%, rgba(138,45,45,.10), transparent 50%),
-    linear-gradient(180deg, var(--navy-deep), var(--navy) 45%, #101526 100%);
-  color:var(--paper);
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:26px 14px;
-  overflow-x:hidden;
-}
-
-/* ============ STAGE / BOOK SHELL ============ */
-.stage{ perspective:2600px; width:100%; max-width:900px; }
-.book{
-  position:relative;
-  background:linear-gradient(160deg,#1b2036,#11142200 60%),var(--navy);
-  border-radius:14px;
-  border:1px solid rgba(217,169,79,.28);
-  box-shadow:0 30px 70px rgba(0,0,0,.55), 0 0 0 1px rgba(217,169,79,.06) inset;
-  padding:14px;
-}
-.book::before{
-  content:'';position:absolute;inset:6px;border:1px solid rgba(217,169,79,.16);border-radius:9px;pointer-events:none;
-}
-
-/* subtle page-indicator dots */
-.dots{display:flex;justify-content:center;gap:9px;margin-bottom:12px}
-.dots span{width:7px;height:7px;border-radius:50%;background:rgba(217,169,79,.25);border:1px solid rgba(217,169,79,.4);cursor:pointer;transition:all .25s}
-.dots span.on{background:var(--gold-bright);box-shadow:0 0 8px rgba(217,169,79,.6);transform:scale(1.25)}
-
-/* ============ LEAF (one visible page) ============ */
-.leaf-wrap{ position:relative; min-height:560px; }
-.leaf{
-  position:relative;
-  background:
-    repeating-linear-gradient(0deg, rgba(0,0,0,.015) 0 2px, transparent 2px 4px),
-    var(--paper);
+  font-family:'DM Sans',sans-serif;
+  background:var(--paper);
   color:var(--ink);
-  border-radius:8px;
-  padding:34px 30px 26px;
-  min-height:560px;
-  box-shadow:0 18px 40px rgba(0,0,0,.35) inset, 0 2px 0 rgba(255,255,255,.4) inset;
-  display:none;
-  transform-origin:left center;
-  backface-visibility:hidden;
-  transition:transform .6s cubic-bezier(.45,.05,.15,1), opacity .5s ease;
+  overflow:hidden;
 }
-.leaf.active{display:block;transform:rotateY(0deg);opacity:1}
-.leaf.leave-next{transform:rotateY(-115deg);opacity:0}
-.leaf.leave-prev{transform:rotateY(115deg);opacity:0}
-.leaf.enter-from-next{transform:rotateY(115deg);opacity:0}
-.leaf.enter-from-prev{transform:rotateY(-115deg);opacity:0}
-
-/* dog-ear corner fold, purely decorative */
-.leaf::after{
-  content:'';position:absolute;right:0;bottom:0;width:34px;height:34px;
-  background:linear-gradient(135deg, transparent 50%, var(--paper-shade) 51%);
-  box-shadow:-2px -2px 6px rgba(0,0,0,.12) inset;border-bottom-right-radius:8px;
+:root{
+  --paper:#f6f3ec;
+  --paper-deep:#efeae0;
+  --ink:#1d1a16;
+  --ink-soft:#726b5c;
+  --ink-faint:#a29a89;
+  --line:#dcd6c8;
+  --accent:#495a41;
+  --warn:#9c4632;
 }
 
-/* ============ COVER ============ */
-.cover{ display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; height:100%; padding:40px 20px; }
-.cover .brand{ font-family:'Inter',sans-serif; font-size:.72rem; letter-spacing:5px; color:var(--gold); margin-bottom:26px; text-transform:uppercase; }
-.cover h1{ font-family:'Playfair Display',serif; font-weight:800; font-size:3rem; line-height:1.08; letter-spacing:1px; }
-.cover h1 span{ display:block; }
-.cover .rule{ width:60px;height:2px;background:var(--gold); margin:20px auto; }
-.cover .subtitle{ font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.2rem; color:var(--ink-soft); letter-spacing:.5px; max-width:420px; }
-.cover .footer-brand{ margin-top:auto; padding-top:34px; font-size:.72rem; letter-spacing:4px; color:var(--ink-soft); text-transform:uppercase; }
-.btn-open{
-  margin-top:34px; padding:16px 46px; border:1px solid var(--gold);
-  background:linear-gradient(135deg,var(--gold),var(--gold-bright)); color:#241a08;
-  font-family:'Inter',sans-serif; font-weight:700; letter-spacing:2px; font-size:.86rem;
-  border-radius:40px; cursor:pointer; box-shadow:0 10px 26px rgba(184,134,58,.35);
-  transition:transform .2s, filter .2s;
+/* ============ SCREEN STACK ============ */
+.stack{ position:fixed; inset:0; }
+.screen{
+  position:absolute; inset:0;
+  display:flex; flex-direction:column;
+  padding:7vh 7vw 6vh;
+  opacity:0; pointer-events:none;
+  transform:translateX(48px) scale(.98);
+  transition:transform .55s cubic-bezier(.22,.61,.36,1), opacity .45s ease;
+  overflow-y:auto;
 }
-.btn-open:hover{ transform:translateY(-2px); filter:brightness(1.06) }
+.screen.active{ opacity:1; transform:translateX(0) scale(1); pointer-events:auto; }
+.screen.exit-left{ opacity:0; transform:translateX(-48px) scale(.98); }
+.screen.exit-right{ opacity:0; transform:translateX(48px) scale(.98); }
+.screen.enter-left{ transform:translateX(-48px) scale(.98); }
 
-/* ============ PAGE HEAD ============ */
-.pagehead{ display:flex; align-items:baseline; gap:14px; margin-bottom:22px; padding-bottom:14px; border-bottom:1px solid rgba(43,32,19,.18); }
-.pagehead .num{ font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:700; color:var(--gold); }
-.pagehead h2{ font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:700; letter-spacing:.4px; color:var(--ink); }
+/* ============ SHARED TYPE ============ */
+.eyebrow{ font-size:.72rem; letter-spacing:.16em; color:var(--ink-faint); text-transform:uppercase; }
+.display{ font-family:'Fraunces',serif; font-weight:600; letter-spacing:-.02em; line-height:.94; color:var(--ink); }
+.idx{ font-family:'DM Sans',sans-serif; font-size:.78rem; letter-spacing:.08em; color:var(--ink-faint); font-variant-numeric:tabular-nums; }
 
-/* ============ STATUS ============ */
-.status-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:6px; }
-.status-card{ padding:18px; text-align:center; border-radius:12px; border:1.5px solid rgba(43,32,19,.18); background:rgba(255,255,255,.35); transition:all .2s; }
-.status-card.ready,.status-card.running{ border-color:var(--forest); background:rgba(47,111,79,.1); }
-.status-card.error{ border-color:var(--wine); background:rgba(138,45,45,.08); }
-.status-icon{ font-size:1.5rem; color:var(--gold); margin-bottom:8px; display:block; }
-.status-card b{ font-family:'Inter',sans-serif; font-size:.8rem; letter-spacing:.5px; text-transform:uppercase; color:var(--ink-soft); }
-.status-card span{ font-weight:600; }
-
-/* ============ FORM ============ */
-.form-grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
-.input-group{ position:relative; }
-.input-group.full{ grid-column:1/-1; }
-label{ display:block; margin-bottom:9px; color:var(--ink-soft); font-weight:600; font-size:.78rem; text-transform:uppercase; letter-spacing:.8px; }
-input[type="text"],input[type="number"]{
-  width:100%; padding:13px 15px; background:#fff; border:1.5px solid rgba(43,32,19,.22);
-  border-radius:9px; color:var(--ink); font:15px 'Inter',sans-serif;
+/* ============ INTRO ============ */
+.intro{ align-items:center; justify-content:center; text-align:center; gap:0; background:var(--paper-deep); }
+.intro .brand{ font-size:.7rem; letter-spacing:.3em; color:var(--ink-soft); margin-bottom:34px; }
+.intro .display{ font-size:clamp(2.6rem,10vw,5.2rem); max-width:820px; }
+.intro .sub{ margin-top:22px; color:var(--ink-soft); font-size:1rem; max-width:340px; line-height:1.55; }
+.enter{
+  margin-top:52px; background:none; border:none; cursor:pointer;
+  font-family:'DM Sans',sans-serif; font-weight:600; font-size:.85rem; letter-spacing:.2em;
+  color:var(--ink); padding-bottom:6px; border-bottom:1px solid var(--ink);
+  transition:opacity .2s;
 }
-input:focus{ outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(184,134,58,.15); }
-.note{ padding:13px 15px; border-left:3px solid var(--gold); background:rgba(184,134,58,.08); border-radius:6px; color:var(--ink-soft); font-size:.86rem; line-height:1.6; margin-top:16px; }
+.enter:hover{ opacity:.6; }
 
-/* file drop styling (visual only — same #commentsFile input underneath) */
-.dropzone{
-  position:relative; border:2px dashed rgba(43,32,19,.3); border-radius:12px;
-  padding:22px 16px; text-align:center; background:rgba(255,255,255,.3); transition:border-color .2s, background .2s;
+/* ============ TOP INDEX ROW ============ */
+.top-row{ display:flex; justify-content:space-between; align-items:flex-start; }
+
+/* ============ HEADING BLOCK ============ */
+.headblock{ flex:1; display:flex; flex-direction:column; justify-content:center; }
+.headblock .display{ font-size:clamp(3.2rem,15vw,7rem); }
+
+/* ============ SESSION ============ */
+.field{ margin-top:36px; max-width:420px; }
+.field label{ display:block; font-size:.72rem; letter-spacing:.14em; color:var(--ink-faint); text-transform:uppercase; margin-bottom:10px; }
+.field input{
+  width:100%; border:none; border-bottom:1px solid var(--line); background:transparent;
+  padding:10px 2px; font:500 1.05rem 'DM Sans',sans-serif; color:var(--ink);
 }
-.dropzone:hover{ border-color:var(--gold); background:rgba(184,134,58,.06); }
-.dropzone i{ font-size:1.5rem; color:var(--gold); margin-bottom:8px; display:block; }
-.dropzone .dz-text{ font-size:.86rem; color:var(--ink-soft); }
-.dropzone .dz-file{ font-size:.86rem; color:var(--forest); font-weight:600; margin-top:6px; }
-.dropzone input[type="file"]{ position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
-
-/* ============ BUTTONS ============ */
-.btnrow{ display:flex; gap:14px; flex-wrap:wrap; }
-.btn{ border:0; padding:15px 26px; border-radius:10px; font:700 .85rem 'Inter',sans-serif; letter-spacing:.6px; cursor:pointer; flex:1; min-width:150px; transition:transform .15s, filter .15s; color:#fff; }
-.btn:hover{ transform:translateY(-2px); filter:brightness(1.08); }
-.btn-success{ background:linear-gradient(135deg,var(--forest),#1f4d37); }
-.btn-primary{ background:linear-gradient(135deg,var(--gold),#8a6220); color:#241a08; }
-.btn-danger{ background:linear-gradient(135deg,var(--wine),#5c1f1f); }
-
-/* ============ COUNTERS ============ */
-.counter{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:18px; }
-.counter div{ padding:14px 6px; border-radius:10px; text-align:center; background:rgba(255,255,255,.35); border:1px solid rgba(43,32,19,.16); }
-.counter strong{ display:block; font-family:'Playfair Display',serif; font-size:1.4rem; color:var(--gold-bright); filter:brightness(.75); }
-.counter span{ font-size:.72rem; text-transform:uppercase; letter-spacing:.6px; color:var(--ink-soft); }
-
-/* ============ LOGS ============ */
-.log-box{ height:300px; overflow:auto; background:#1c1912; border:1px solid rgba(184,134,58,.35); border-radius:10px; padding:16px; font:13px 'Courier New',monospace; line-height:1.65; color:#e8dcc0; }
-.log-box::-webkit-scrollbar{width:7px}
-.log-box::-webkit-scrollbar-thumb{background:var(--gold);border-radius:8px}
-
-/* ============ FINAL PAGE ============ */
-.final-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:6px; }
-.final-grid .cell{ padding:16px; border-radius:10px; background:rgba(255,255,255,.35); border:1px solid rgba(43,32,19,.16); text-align:center; }
-.final-grid .cell span.k{ display:block; font-size:.72rem; letter-spacing:.6px; text-transform:uppercase; color:var(--ink-soft); margin-bottom:6px; }
-.final-grid .cell span.v{ font-family:'Playfair Display',serif; font-weight:700; font-size:1.15rem; color:var(--ink); }
-.btn-cover{
-  margin-top:26px; width:100%; padding:15px; border:1px solid var(--gold); background:transparent; color:var(--gold);
-  font:700 .82rem 'Inter',sans-serif; letter-spacing:1.5px; border-radius:10px; cursor:pointer; transition:all .2s;
+.field input:focus{ outline:none; border-color:var(--ink); }
+.field input::placeholder{ color:var(--ink-faint); }
+.textbtn{
+  margin-top:26px; background:none; border:none; cursor:pointer;
+  font:600 .82rem 'DM Sans',sans-serif; letter-spacing:.14em; color:var(--ink);
+  padding:12px 0 10px; border-bottom:1px solid var(--ink); display:inline-block;
+  transition:opacity .2s, color .2s, border-color .2s;
 }
-.btn-cover:hover{ background:var(--gold); color:#241a08; }
+.textbtn:hover{ opacity:.6; }
+.textbtn.muted{ color:var(--ink-soft); border-color:var(--line); }
+.status-line{ margin-top:30px; display:flex; align-items:center; gap:9px; font-size:.85rem; color:var(--ink-soft); }
+.status-card{ display:inline-flex; align-items:center; gap:9px; }
+.status-card::before{ content:''; width:6px; height:6px; border-radius:50%; background:var(--warn); }
+.status-card.ready::before,.status-card.running::before{ background:var(--accent); }
 
-/* ============ NAV ============ */
-.navrow{ display:flex; justify-content:space-between; gap:12px; margin-top:26px; }
-.navbtn{
-  flex:1; padding:14px 16px; border-radius:10px; border:1px solid var(--gold); background:transparent; color:var(--ink);
-  font:600 .8rem 'Inter',sans-serif; letter-spacing:1px; text-transform:uppercase; cursor:pointer;
-  display:flex; align-items:center; justify-content:center; gap:8px; transition:all .2s;
+/* ============ POST FIELDS ============ */
+.fieldset{ margin-top:8px; display:flex; flex-direction:column; gap:0; max-width:520px; }
+.fieldset .field{ margin-top:30px; max-width:none; }
+.fieldset .row2{ display:flex; gap:28px; flex-wrap:wrap; }
+.fieldset .row2 .field{ flex:1; min-width:180px; }
+
+.drop{
+  margin-top:30px; border:1px solid var(--line); border-radius:2px; padding:34px 20px;
+  text-align:center; position:relative; transition:border-color .2s, background .2s; cursor:pointer;
 }
-.navbtn:hover{ background:rgba(184,134,58,.12); }
-.navbtn:disabled{ opacity:.3; cursor:not-allowed; }
+.drop:hover{ border-color:var(--ink-soft); background:rgba(0,0,0,.015); }
+.drop svg{ width:20px; height:20px; margin-bottom:14px; }
+.drop .dtext{ font-size:.85rem; letter-spacing:.06em; color:var(--ink-soft); }
+.drop .dfile{ margin-top:8px; font-size:.85rem; color:var(--accent); font-weight:600; }
+.drop input[type="file"]{ position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
 
-@media(max-width:650px){
-  .form-grid{grid-template-columns:1fr}
-  .input-group.full{grid-column:auto}
-  .status-grid{grid-template-columns:1fr 1fr}
-  .counter{grid-template-columns:1fr 1fr}
-  .final-grid{grid-template-columns:1fr 1fr}
-  .cover h1{font-size:2.1rem}
-  .leaf{padding:26px 18px 22px}
-  .leaf-wrap{min-height:auto}
-  .leaf{min-height:auto}
-  body{padding:16px 10px}
+/* ============ CONTROL ============ */
+.actions{ display:flex; gap:40px; margin-top:40px; flex-wrap:wrap; }
+.action{
+  background:none; border:none; cursor:pointer; text-align:left; padding:0;
+  font-family:'Fraunces',serif; font-size:clamp(1.6rem,5vw,2.4rem); font-weight:600; color:var(--ink);
+  padding-bottom:10px; border-bottom:1px solid var(--line); transition:border-color .2s, opacity .2s;
+}
+.action:hover{ border-color:var(--ink); opacity:.75; }
+.action.stop{ color:var(--ink-soft); }
+
+.stats-row{ display:flex; gap:0; margin-top:56px; flex-wrap:wrap; border-top:1px solid var(--line); }
+.stat{ flex:1; min-width:120px; padding:22px 22px 0 0; }
+.stat .n{ font-family:'Fraunces',serif; font-size:clamp(1.6rem,5vw,2.4rem); font-weight:600; font-variant-numeric:tabular-nums; }
+.stat .l{ margin-top:6px; font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); }
+.sender-line{ margin-top:22px; font-size:.85rem; color:var(--ink-soft); }
+.sender-line b{ color:var(--ink); font-weight:600; }
+
+/* ============ LIVE ============ */
+.timeline{
+  margin-top:24px; padding-left:18px; border-left:1px solid var(--line);
+  font-size:.88rem; line-height:2.1; color:var(--ink-soft); overflow-y:auto; flex:1;
+  font-variant-numeric:tabular-nums;
+}
+
+/* ============ SUMMARY ============ */
+.summary-grid{ margin-top:34px; display:flex; flex-direction:column; }
+.srow{ display:flex; justify-content:space-between; align-items:baseline; padding:16px 0; border-bottom:1px solid var(--line); gap:20px; }
+.srow .k{ font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); }
+.srow .v{ font-family:'Fraunces',serif; font-size:1.3rem; font-weight:600; color:var(--ink); text-align:right; }
+.final-actions{ display:flex; gap:34px; margin-top:40px; }
+
+/* ============ FOOTER NAV (screens 1-5) ============ */
+.footnav{ display:flex; align-items:center; justify-content:center; gap:16px; margin-top:auto; padding-top:26px; }
+.footnav .dash{ display:flex; gap:14px; }
+.footnav button{
+  background:none;border:none;cursor:pointer;font:600 .78rem 'DM Sans',sans-serif;
+  letter-spacing:.08em;color:var(--ink-faint);padding:4px 2px;transition:color .2s;
+}
+.footnav button.on{ color:var(--ink); border-bottom:1px solid var(--ink); }
+.footnav .arrow{ font-size:1rem; color:var(--ink-soft); background:none;border:none;cursor:pointer;padding:4px 8px; }
+.footnav .arrow:disabled{ opacity:.25; cursor:default; }
+.footnav .arrow:hover:not(:disabled){ color:var(--ink); }
+
+@media(max-width:600px){
+  .screen{ padding:6vh 6vw 5vh; }
+  .fieldset .row2{ flex-direction:column; gap:0; }
+  .stats-row{ flex-wrap:wrap; }
+  .stat{ min-width:44%; padding-bottom:22px; }
+  .actions{ gap:26px; }
+  .final-actions{ gap:24px; }
 }
 </style>
 </head>
 <body>
 
-<div class="stage">
-  <div class="dots" id="dots">
-    <span class="on" data-i="0"></span><span data-i="1"></span><span data-i="2"></span>
-    <span data-i="3"></span><span data-i="4"></span><span data-i="5"></span>
-  </div>
+<div class="stack" id="stack">
 
-  <div class="book">
-    <div class="leaf-wrap" id="leafWrap">
+  <!-- INTRO -->
+  <section class="screen active intro" data-screen="0">
+    <div class="brand">YK Tricks India</div>
+    <div class="display">Comment<br>Automation</div>
+    <div class="sub">A controlled, single-account comment runner. Set a token, load your file, and watch it run.</div>
+    <button class="enter" onclick="goScreen(1)">ENTER</button>
+  </section>
 
-      <!-- COVER -->
-      <section class="leaf active" data-leaf="0">
-        <div class="cover">
-          <div class="brand">Digital Comment Panel</div>
-          <h1><span>INSTAGRAM</span><span>COMMENT PANEL</span></h1>
-          <div class="rule"></div>
-          <div class="subtitle">Controlled single-account comment runner</div>
-          <button class="btn-open" onclick="goLeaf(1)">OPEN PANEL</button>
-          <div class="footer-brand">YK Tricks India</div>
-        </div>
-      </section>
-
-      <!-- PAGE 01 -->
-      <section class="leaf" data-leaf="1">
-        <div class="pagehead"><span class="num">01</span><h2>Session Token</h2></div>
-
-        <div class="status-grid">
-          <div class="status-card error" id="tokenCard"><i class="fas fa-key status-icon"></i><b>Session</b><br><span id="tokenStatus">❌ Missing</span></div>
-          <div class="status-card error" id="runCard"><i class="fas fa-play status-icon"></i><b>Comments</b><br><span id="runStatus">🔴 Stopped</span></div>
-        </div>
-
-        <div style="margin-top:24px">
-          <label>Session Token</label>
-          <input id="tokenInput" type="text" placeholder="Paste session token">
-          <div class="btnrow" style="margin-top:16px"><button class="btn btn-success" onclick="setToken()">SET TOKEN</button></div>
-          <div class="note">Comments are sent only from the authenticated account. The panel does not rotate accounts or impersonate another username.</div>
-        </div>
-
-        <div class="navrow">
-          <button class="navbtn" onclick="goLeaf(0)"><i class="fas fa-chevron-left"></i> Previous</button>
-          <button class="navbtn" onclick="goLeaf(2)">Next Page <i class="fas fa-chevron-right"></i></button>
-        </div>
-      </section>
-
-      <!-- PAGE 02 -->
-      <section class="leaf" data-leaf="2">
-        <div class="pagehead"><span class="num">02</span><h2>Post Comment Tool</h2></div>
-
-        <div class="form-grid">
-          <div class="input-group full">
-            <label>Post ID / Post URL</label>
-            <input id="postId" placeholder="12345678901234567 or https://instagram.com/p/SHORTCODE/ or https://instagram.com/reel/SHORTCODE/">
-          </div>
-          <div class="input-group">
-            <label>Target Post Owner (optional)</label>
-            <input id="ownerName" placeholder="@username">
-          </div>
-          <div class="input-group">
-            <label>Delay Between Comments (10–3600 sec)</label>
-            <input id="commentDelay" type="number" value="15" min="10" max="3600">
-          </div>
-          <div class="input-group full">
-            <label>upload.txt — One comment per line</label>
-            <div class="dropzone">
-              <i class="fas fa-file-arrow-up"></i>
-              <div class="dz-text">Click or drop your .txt file here</div>
-              <div class="dz-file" id="dzFileName"></div>
-              <input id="commentsFile" type="file" accept=".txt,text/plain">
-            </div>
-          </div>
-        </div>
-        <div class="note">Each non-empty TXT line is treated as one comment. Duplicate lines are removed. The current controlled run loads up to 50 unique comments and processes them once.</div>
-
-        <div class="navrow">
-          <button class="navbtn" onclick="goLeaf(1)"><i class="fas fa-chevron-left"></i> Previous</button>
-          <button class="navbtn" onclick="goLeaf(3)">Next Page <i class="fas fa-chevron-right"></i></button>
-        </div>
-      </section>
-
-      <!-- PAGE 03 -->
-      <section class="leaf" data-leaf="3">
-        <div class="pagehead"><span class="num">03</span><h2>Controls &amp; Stats</h2></div>
-
-        <div class="btnrow">
-          <button class="btn btn-primary" onclick="startComments()">START COMMENTS</button>
-          <button class="btn btn-danger" onclick="stopComments()">STOP COMMENTS</button>
-        </div>
-
-        <div class="counter">
-          <div><strong id="loaded">0</strong><span>Loaded</span></div>
-          <div><strong id="sent">0</strong><span>Sent</span></div>
-          <div><strong id="failed">0</strong><span>Failed</span></div>
-          <div><strong id="uptime">00:00</strong><span>Uptime</span></div>
-        </div>
-        <div class="note">Sender: <b id="sender">—</b></div>
-
-        <div class="navrow">
-          <button class="navbtn" onclick="goLeaf(2)"><i class="fas fa-chevron-left"></i> Previous</button>
-          <button class="navbtn" onclick="goLeaf(4)">Next Page <i class="fas fa-chevron-right"></i></button>
-        </div>
-      </section>
-
-      <!-- PAGE 04 -->
-      <section class="leaf" data-leaf="4">
-        <div class="pagehead"><span class="num">04</span><h2>Live Logs</h2></div>
-        <div class="log-box" id="logs">Panel ready. Set a session token to begin.</div>
-
-        <div class="navrow">
-          <button class="navbtn" onclick="goLeaf(3)"><i class="fas fa-chevron-left"></i> Previous</button>
-          <button class="navbtn" onclick="goLeaf(5)">Next Page <i class="fas fa-chevron-right"></i></button>
-        </div>
-      </section>
-
-      <!-- FINAL -->
-      <section class="leaf" data-leaf="5">
-        <div class="pagehead"><span class="num">✦</span><h2>Session Summary</h2></div>
-
-        <div class="final-grid">
-          <div class="cell"><span class="k">Session Status</span><span class="v" id="sessionStatusFinal">❌ Missing</span></div>
-          <div class="cell"><span class="k">Comment Status</span><span class="v" id="commentStatusFinal">🔴 Stopped</span></div>
-          <div class="cell"><span class="k">Loaded</span><span class="v" id="loadedFinal">0</span></div>
-          <div class="cell"><span class="k">Sent</span><span class="v" id="sentFinal">0</span></div>
-          <div class="cell"><span class="k">Failed</span><span class="v" id="failedFinal">0</span></div>
-          <div class="cell"><span class="k">Uptime</span><span class="v" id="uptimeFinal">00:00</span></div>
-          <div class="cell" style="grid-column:1/-1"><span class="k">Sender</span><span class="v" id="senderFinal">—</span></div>
-        </div>
-
-        <button class="btn-cover" onclick="goLeaf(0)">BACK TO COVER</button>
-      </section>
-
+  <!-- SESSION -->
+  <section class="screen" data-screen="1">
+    <div class="top-row"><span class="idx">01 / 05</span></div>
+    <div class="headblock">
+      <div class="display">Session</div>
+      <div class="field">
+        <label>Session Token</label>
+        <input id="tokenInput" type="text" placeholder="Paste session token">
+        <button class="textbtn" onclick="setToken()">SET TOKEN</button>
+      </div>
+      <div class="status-line">
+        <span class="status-card error" id="tokenCard"><span id="tokenStatus">Missing</span></span>
+      </div>
     </div>
-  </div>
+    <div class="footnav" id="footnav1"></div>
+  </section>
+
+  <!-- POST -->
+  <section class="screen" data-screen="2">
+    <div class="top-row"><span class="idx">02 / 05</span></div>
+    <div class="headblock">
+      <div class="display">Post</div>
+      <div class="fieldset">
+        <div class="field">
+          <label>Post URL</label>
+          <input id="postId" placeholder="instagram.com/p/SHORTCODE or media id">
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label>Owner</label>
+            <input id="ownerName" placeholder="@username (optional)">
+          </div>
+          <div class="field">
+            <label>Delay</label>
+            <input id="commentDelay" type="number" value="15" min="10" max="3600" placeholder="10–3600 sec">
+          </div>
+        </div>
+        <div class="field" style="max-width:none">
+          <label>Comments File</label>
+          <div class="drop">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 16V4M12 4l-4 4M12 4l4 4"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+            <div class="dtext">DROP COMMENTS FILE HERE — one comment per line</div>
+            <div class="dfile" id="dzFileName"></div>
+            <input id="commentsFile" type="file" accept=".txt,text/plain">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footnav" id="footnav2"></div>
+  </section>
+
+  <!-- CONTROL -->
+  <section class="screen" data-screen="3">
+    <div class="top-row"><span class="idx">03 / 05</span></div>
+    <div class="headblock">
+      <div class="display">Ready</div>
+      <div class="status-line">
+        <span class="status-card error" id="runCard"><span id="runStatus">Stopped</span></span>
+      </div>
+      <div class="actions">
+        <button class="action" onclick="startComments()">Start</button>
+        <button class="action stop" onclick="stopComments()">Stop</button>
+      </div>
+      <div class="stats-row">
+        <div class="stat"><div class="n" id="loaded">0</div><div class="l">Loaded</div></div>
+        <div class="stat"><div class="n" id="sent">0</div><div class="l">Sent</div></div>
+        <div class="stat"><div class="n" id="failed">0</div><div class="l">Failed</div></div>
+        <div class="stat"><div class="n" id="uptime">00:00</div><div class="l">Uptime</div></div>
+      </div>
+      <div class="sender-line">Sender — <b id="sender">—</b></div>
+    </div>
+    <div class="footnav" id="footnav3"></div>
+  </section>
+
+  <!-- LIVE -->
+  <section class="screen" data-screen="4">
+    <div class="top-row"><span class="idx">04 / 05</span></div>
+    <div class="display" style="flex:0">Live</div>
+    <div class="timeline" id="logs">Ready. Set a session token to begin.</div>
+    <div class="footnav" id="footnav4"></div>
+  </section>
+
+  <!-- SUMMARY -->
+  <section class="screen" data-screen="5">
+    <div class="top-row"><span class="idx">05 / 05</span></div>
+    <div class="headblock">
+      <div class="display">Summary</div>
+      <div class="summary-grid">
+        <div class="srow"><span class="k">Session Status</span><span class="v" id="sessionStatusFinal">Missing</span></div>
+        <div class="srow"><span class="k">Comment Status</span><span class="v" id="commentStatusFinal">Stopped</span></div>
+        <div class="srow"><span class="k">Sender</span><span class="v" id="senderFinal">—</span></div>
+        <div class="srow"><span class="k">Loaded</span><span class="v" id="loadedFinal">0</span></div>
+        <div class="srow"><span class="k">Sent</span><span class="v" id="sentFinal">0</span></div>
+        <div class="srow"><span class="k">Failed</span><span class="v" id="failedFinal">0</span></div>
+        <div class="srow"><span class="k">Uptime</span><span class="v" id="uptimeFinal">00:00</span></div>
+      </div>
+      <div class="final-actions">
+        <button class="textbtn" onclick="goScreen(1)">RESTART</button>
+        <button class="textbtn muted" onclick="goScreen(0)">HOME</button>
+      </div>
+    </div>
+    <div class="footnav" id="footnav5"></div>
+  </section>
+
 </div>
 
 <script>
-/* ================= BOOK PAGE NAVIGATION (additive, does not touch existing routes/logic) ================= */
-let currentLeaf = 0;
-const TOTAL_LEAVES = 6;
+/* ============ SCREEN NAVIGATION (additive — does not touch existing routes/logic) ============ */
+let current = 0;
+const TOTAL = 6; /* 0 intro + 1..5 numbered */
 
-function goLeaf(target){
-  if(target === currentLeaf || target < 0 || target >= TOTAL_LEAVES) return;
-  const dir = target > currentLeaf ? 'next' : 'prev';
-  const curEl = document.querySelector('.leaf[data-leaf="'+currentLeaf+'"]');
-  const nextEl = document.querySelector('.leaf[data-leaf="'+target+'"]');
+function renderFootnav(){
+  for(let s=1;s<=5;s++){
+    const host = document.getElementById('footnav'+s);
+    if(!host || host.dataset.built) continue;
+    host.dataset.built = '1';
+    const prev = document.createElement('button');
+    prev.className='arrow'; prev.textContent='←'; prev.onclick=()=>goScreen(current-1);
+    const dash = document.createElement('div'); dash.className='dash';
+    for(let i=1;i<=5;i++){
+      const b=document.createElement('button');
+      b.textContent = String(i).padStart(2,'0');
+      b.dataset.i = i;
+      b.onclick = ()=>goScreen(i);
+      dash.appendChild(b);
+    }
+    const next = document.createElement('button');
+    next.className='arrow'; next.textContent='→'; next.onclick=()=>goScreen(current+1);
+    host.appendChild(prev); host.appendChild(dash); host.appendChild(next);
+  }
+}
+function refreshFootnav(){
+  document.querySelectorAll('.footnav .dash button').forEach(b=>{
+    b.classList.toggle('on', parseInt(b.dataset.i)===current);
+  });
+  document.querySelectorAll('.footnav .arrow').forEach((b,i)=>{
+    const isPrev = b.textContent==='←';
+    if(isPrev) b.disabled = (current<=1);
+    else b.disabled = (current>=5);
+  });
+}
 
-  curEl.classList.add(dir === 'next' ? 'leave-next' : 'leave-prev');
-  nextEl.style.display = 'block';
-  nextEl.classList.add(dir === 'next' ? 'enter-from-next' : 'enter-from-prev');
+function goScreen(target){
+  if(target<0||target>=TOTAL||target===current) return;
+  const dir = target>current ? 'next':'prev';
+  const curEl = document.querySelector('.screen[data-screen="'+current+'"]');
+  const nextEl = document.querySelector('.screen[data-screen="'+target+'"]');
+
+  curEl.classList.remove('active');
+  curEl.classList.add(dir==='next'?'exit-left':'exit-right');
+
+  nextEl.classList.add(dir==='next'?'':'enter-left');
   void nextEl.offsetWidth;
-
-  requestAnimationFrame(() => {
+  requestAnimationFrame(()=>{
     nextEl.classList.add('active');
-    nextEl.classList.remove('enter-from-next','enter-from-prev');
+    nextEl.classList.remove('enter-left');
   });
 
-  setTimeout(() => {
-    curEl.classList.remove('active','leave-next','leave-prev');
-    curEl.style.display = 'none';
-    currentLeaf = target;
-    document.querySelectorAll('#dots span').forEach(d => {
-      d.classList.toggle('on', parseInt(d.dataset.i) === currentLeaf);
-    });
-  }, 620);
+  setTimeout(()=>{
+    curEl.classList.remove('exit-left','exit-right');
+    current = target;
+    refreshFootnav();
+  }, 560);
 }
-document.querySelectorAll('#dots span').forEach(d => {
-  d.addEventListener('click', () => goLeaf(parseInt(d.dataset.i)));
+
+document.addEventListener('keydown', (e)=>{
+  if(e.key==='ArrowRight') goScreen(Math.min(current+1, TOTAL-1));
+  if(e.key==='ArrowLeft') goScreen(Math.max(current-1, 0));
 });
-document.addEventListener('keydown', (e) => {
-  if(e.key === 'ArrowRight') goLeaf(Math.min(currentLeaf+1, TOTAL_LEAVES-1));
-  if(e.key === 'ArrowLeft') goLeaf(Math.max(currentLeaf-1, 0));
-});
+
+let touchX=0;
+document.addEventListener('touchstart', e=>{ touchX = e.touches[0].clientX; }, {passive:true});
+document.addEventListener('touchend', e=>{
+  const dx = e.changedTouches[0].clientX - touchX;
+  if(Math.abs(dx) > 60){
+    if(dx < 0) goScreen(Math.min(current+1, TOTAL-1));
+    else goScreen(Math.max(current-1, 0));
+  }
+}, {passive:true});
+
+renderFootnav();
+refreshFootnav();
 
 /* cosmetic-only: show selected filename in the drop zone (does not affect startComments()) */
 const _cf = document.getElementById('commentsFile');
@@ -623,7 +609,7 @@ function update(){
    document.getElementById('runStatus').textContent=d.running?'🟢 Running':'🔴 Stopped';
    document.getElementById('runCard').className=d.running?'status-card running':'status-card error';
 
-   /* mirror onto the Final Status page — additive only, no existing logic touched */
+   /* mirror onto the Summary screen — additive only, no existing logic touched */
    document.getElementById('loadedFinal').textContent=d.loaded||0;
    document.getElementById('sentFinal').textContent=d.sent||0;
    document.getElementById('failedFinal').textContent=d.failed||0;
